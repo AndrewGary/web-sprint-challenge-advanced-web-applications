@@ -4,7 +4,7 @@ import PT from 'prop-types'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
-  const { articles, getArticles, deleteArticle, setCurrentArticleId} = props;
+  const { articles, getArticles, deleteArticle, setCurrentArticleId, updateArticle} = props;
 
   console.log('articles inside of Articles.js: ', articles);
 

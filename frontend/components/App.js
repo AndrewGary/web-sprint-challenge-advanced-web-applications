@@ -71,7 +71,7 @@ export default function App() {
     // On success, we should set the articles in their proper state and
     // put the server success message in its proper state.
     // If something goes wrong, check the status of the response:
-    // if it's a 401 the token might have gone bad, and we should redirect to login.
+    // if it's a 401 the token might have gone bad, and we should redirect to login..
     // Don't forget to turn off the spinner!
     setMessage('');
     setSpinnerOn(true);
@@ -103,6 +103,7 @@ export default function App() {
         ...articles,
         resp.data.article
       ])
+      setMessage(resp.data.message)
     })
     .catch(error => {
       console.log(error);
@@ -138,8 +139,11 @@ export default function App() {
     axiosWithAuth().delete(`http://localhost:9000/api/articles/${article_id}`)
     .then(resp => {
       console.log('deleteArticle resp: ', resp)
-      getArticles()
+      setArticles(articles.filter(item => {
+        return item.article_id !== article_id
+      }))
       setMessage(resp.data.message)
+
     })
     .catch(error => {
       console.log('promise returned an error');
