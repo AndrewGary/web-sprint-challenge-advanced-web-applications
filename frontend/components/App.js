@@ -127,9 +127,34 @@ export default function App() {
     // })
   }
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = ( article_id, article ) => {
     // ✨ implement
     // You got this!
+    setSpinnerOn(true);
+    axiosWithAuth().put(`http://localhost:9000/api/articles/${article_id}`, {title: article.title, text: article.text, topic: article.topic})
+    .then(resp => {
+      console.log('updateArticle resp: ', resp);
+      setMessage(resp.data.message)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+    .finally(() => {
+      setSpinnerOn(false);
+    })
+
+    const returnArray = []
+    for(let i = 0; i < articles.length; i++){
+      if(articles[i].article_id === article_id){
+        returnArray.push(article)
+      }else{
+        returnArray.push(articles[i])
+      }
+    }
+    setArticles(returnArray);
+    // console.log('article_id: ', article_id)
+    // console.log('article: ', article)
+    setCurrentArticleId(null)
   }
 
   const deleteArticle = article_id => {
@@ -166,7 +191,9 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId}/>
+              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId} currentArticle={articles.find((art) => {
+                return art.article_id == currentArticleId
+              })}/>
               <Articles articles={articles} getArticles={getArticles} deleteArticle={deleteArticle} setCurrentArticleId={setCurrentArticleId}/>
             </>
           } />

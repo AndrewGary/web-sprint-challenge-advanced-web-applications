@@ -4,7 +4,7 @@ import PT from 'prop-types'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
-  const { articles, getArticles, deleteArticle, setCurrentArticleId, updateArticle} = props;
+  const { articles, getArticles, deleteArticle, setCurrentArticleId} = props;
 
   console.log('articles inside of Articles.js: ', articles);
 
@@ -18,10 +18,6 @@ export default function Articles(props) {
     // ✨ grab the articles here, on first render only
     getArticles();
   }, [])
-
-  const handleClick = e => {
-    console.log('yeahhh');
-  }
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
@@ -40,7 +36,7 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button onClick={handleClick}>Edit</button>
+                  <button onClick={() => {setCurrentArticleId(art.article_id)}}>Edit</button>
                   <button onClick={() => {deleteArticle(art.article_id)}}>Delete</button>
                 </div>
               </div>
