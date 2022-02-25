@@ -29,12 +29,10 @@ export default function App() {
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
-    console.log('logging out');
     if(localStorage.getItem('token')){
       setMessage('Goodbye!');
       localStorage.removeItem('token');
     }
-    // navigate('/');
     redirectToLogin();
   }
 
@@ -50,9 +48,7 @@ export default function App() {
     
     axios.post('http://localhost:9000/api/login', {username, password})
     .then(resp => {
-      console.log('login axios resp: ', resp);
       localStorage.setItem('token', resp.data.token)
-      console.log('herererere: ', resp.data.message)
       setMessage(resp.data.message);
       redirectToArticles()
     })
@@ -77,7 +73,6 @@ export default function App() {
     setSpinnerOn(true);
     axiosWithAuth().get('http://localhost:9000/api/articles')
     .then(resp => {
-      console.log('getArticles axiosWithAuth resp: ', resp)
       setMessage(resp.data.message)
       setArticles(resp.data.articles)
     })
@@ -98,7 +93,6 @@ export default function App() {
 
     axiosWithAuth().post('http://localhost:9000/api/articles', article)
     .then(resp => {
-      console.log('postArticls axiosWithAuth resp: ', resp)
       setArticles([
         ...articles,
         resp.data.article
@@ -111,20 +105,6 @@ export default function App() {
     .finally(() => {
       setSpinnerOn(false);
     })
-    // setSpinnerOn(true);
-    // axiosWithAuth().post('http://localhost:9000/api/articles', {headers: {
-    //   Authorization: localStorage.getItem('token')
-    // }})
-    // .then(resp => {
-    //   console.log('getArticles axiosWithAuth resp: ', resp)
-    //   setArticles(resp.data.articles)
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // })
-    // .finally(() => {
-    //   setSpinnerOn(false);
-    // })
   }
 
   const updateArticle = ( article_id, article ) => {
@@ -133,7 +113,6 @@ export default function App() {
     setSpinnerOn(true);
     axiosWithAuth().put(`http://localhost:9000/api/articles/${article_id}`, {title: article.title, text: article.text, topic: article.topic})
     .then(resp => {
-      console.log('updateArticle resp: ', resp);
       setMessage(resp.data.message)
     })
     .catch(error => {
@@ -152,8 +131,6 @@ export default function App() {
       }
     }
     setArticles(returnArray);
-    // console.log('article_id: ', article_id)
-    // console.log('article: ', article)
     setCurrentArticleId(null)
   }
 
@@ -163,7 +140,6 @@ export default function App() {
     
     axiosWithAuth().delete(`http://localhost:9000/api/articles/${article_id}`)
     .then(resp => {
-      console.log('deleteArticle resp: ', resp)
       setArticles(articles.filter(item => {
         return item.article_id !== article_id
       }))
@@ -171,7 +147,7 @@ export default function App() {
 
     })
     .catch(error => {
-      console.log('promise returned an error');
+      console.log(error);
     })
   }
 
@@ -191,7 +167,7 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId} currentArticle={articles.find((art) => {
+              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} currentArticleId={currentArticleId} currentArticle={articles.find((art) => {
                 return art.article_id == currentArticleId
               })}/>
               <Articles articles={articles} getArticles={getArticles} deleteArticle={deleteArticle} setCurrentArticleId={setCurrentArticleId}/>
